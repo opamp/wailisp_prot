@@ -1,0 +1,14 @@
+#+TITLE: WaiLisp
+
+* 概要
+
+Qt6とguileを使ってGUIなREPLを作って遊んでみるだけのプロジェクト
+
+* Main Library License
+
+- Qt6: LGPLv3
+- Guile3: LGPGv3
+
+* License
+
+See LICENSE.txt
