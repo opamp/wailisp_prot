@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 #include "CentralWidget.hpp"
 
@@ -14,15 +13,13 @@ CentralWidget::CentralWidget(QWidget* parent)
   lispthread->start();
 
   // UI
-  topbox = new QVBoxLayout();
-  texpline_box = new QHBoxLayout();
-  
-  texpline = new QLineEdit();
-  runbtn = new QPushButton(tr("Run(Eval)"));
+  topbox = new QVBoxLayout(this);
+  texpline_box = new QHBoxLayout(this);
+  texpline = new QLineEdit(this);
+  runbtn = new QPushButton(tr("Run(Eval)"), this);
+  console = new QTextEdit(this);
   
   connect(runbtn, SIGNAL(clicked()), this, SLOT(push_run()));
-
-  console = new QTextEdit();
 
   texpline_box->addWidget(texpline);
   texpline_box->addWidget(runbtn);

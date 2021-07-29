@@ -11,7 +11,7 @@ MainWindow::MainWindow() {
   fileMenu->addAction(exitAction);
 
   // Widget init
-  central = new CentralWidget();
+  central = new CentralWidget(this);
   setCentralWidget(central);
   setWindowTitle(tr("GuiREPL"));
 }
