@@ -10,6 +10,7 @@ CentralWidget::CentralWidget(QWidget* parent)
   lisprunner->moveToThread(lispthread);
   connect(lispthread, SIGNAL(finished()), lisprunner, SLOT(deleteLater()));
   connect(this, SIGNAL(run_lisp(QString)), lisprunner, SLOT(run(QString)));
+  connect(this, SIGNAL(init_lisp()), lisprunner, SLOT(init()));
   connect(lisprunner, SIGNAL(returned(QString, QString)), this, SLOT(show_returned(QString, QString)));
   lispthread->start();
 
@@ -29,6 +30,8 @@ CentralWidget::CentralWidget(QWidget* parent)
   topbox->addWidget(console);
 
   setLayout(topbox);
+
+  emit init_lisp();
 }
 
 

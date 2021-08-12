@@ -9,6 +9,7 @@ public:
   LispRunner(QObject *parent = 0);
 
 public slots:
+  void init();
   void run(QString exp);
 
 signals:

@@ -15,7 +15,9 @@ public:
   size_t write(SCM src, size_t start, size_t count);
 
   void set_data(QString data);
-  QString get_data();
+  QString get_data(bool notclear = false);
+
+  void clear();
   
 protected:
   scm_t_port_type* porttype;

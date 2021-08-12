@@ -18,6 +18,7 @@ public:
 
 signals:
   void run_lisp(QString exp);
+  void init_lisp();
 
 private slots:
   void push_run();

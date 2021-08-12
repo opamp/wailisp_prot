@@ -27,7 +27,7 @@ SCM LispPort::get_read_port() {
 }
 
 SCM LispPort::get_write_port() {
-  return scm_c_make_port(porttype, SCM_WRTNG, (scm_t_bits)this);
+  return scm_c_make_port(porttype, SCM_WRTNG | SCM_BUFLINE, (scm_t_bits)this);
 }
 
 size_t LispPort::read(SCM dst, size_t start, size_t count) {
@@ -38,7 +38,7 @@ size_t LispPort::read(SCM dst, size_t start, size_t count) {
   QString read_str;
   if(data.length() <= count) {
     read_str = data;
-    data = QString("");
+    data.clear();
   }else{
     read_str = data.left(count);
     data = data.right(count + 1);
@@ -65,6 +65,14 @@ void LispPort::set_data(QString data) {
   this->data = data;
 }
 
-QString LispPort::get_data() {
-  return this->data;
+QString LispPort::get_data(bool notclear) {
+  QString rtn = this->data;
+  if(!notclear){
+    this->clear();
+  }
+  return rtn;
+}
+
+void LispPort::clear() {
+  this->data.clear();
 }
