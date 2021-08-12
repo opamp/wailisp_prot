@@ -5,12 +5,12 @@
 sample: https://github.com/emacsmirror/lilypond/blob/2be19f11c11d89f03d0c54ceeb20b8a022261af7/lily/include/overlay-string-port.hh
 */
 
-static size_t read_port(SCM port, SCM dst, size_t start, size_t count) {
+static size_t read_stream(SCM port, SCM dst, size_t start, size_t count) {
   auto obj = (LispPort*)SCM_STREAM(port);
   return obj->read(dst, start ,count);
 }
 
-static size_t write_port(SCM port, SCM src, size_t start, size_t count) {
+static size_t write_stream(SCM port, SCM src, size_t start, size_t count) {
   auto obj = (LispPort*)SCM_STREAM(port);
   return obj->write(src, start, count);
 }
@@ -18,7 +18,7 @@ static size_t write_port(SCM port, SCM src, size_t start, size_t count) {
 LispPort::LispPort(QObject *parent):
   QObject(parent) {
   char portname[] = "lispport";
-  porttype = scm_make_port_type(portname, &read_port, &write_port);
+  porttype = scm_make_port_type(portname, &read_stream, &write_stream);
 }
 
 
@@ -48,6 +48,7 @@ size_t LispPort::read(SCM dst, size_t start, size_t count) {
   const char *cstr = ba.data();
 
   memcpy(SCM_BYTEVECTOR_CONTENTS(dst) + start, cstr, strlen(cstr));
+  emit read_port();
   return strlen(cstr);
 }
 
@@ -57,6 +58,7 @@ size_t LispPort::write(SCM src, size_t start, size_t count) {
   buf[count] = '\0';
   QString qbuf = QString(reinterpret_cast<char*>(buf));
   this->data += qbuf;
+  emit write_port();
   return count;
 }
 

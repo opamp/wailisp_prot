@@ -1,13 +1,6 @@
 #include "LispRunner.hpp"
 #include <libguile.h>
 
-struct std_ports {
-  LispPort *in;
-  LispPort *out;
-  LispPort *err;
-};
-
-
 LispRunner::LispRunner(QObject *parent) :
   QObject(parent) {
 }
@@ -17,6 +10,8 @@ void LispRunner::init() {
   in = new LispPort(this);
   out = new LispPort(this);
   err = new LispPort(this);
+  connect(out, SIGNAL(write_port()), this, SLOT(get_stdoutportstr()));
+  connect(err, SIGNAL(write_port()), this, SLOT(get_stderrportstr()));
 
   scm_c_eval_string("(define stdin (current-input-port))");
   scm_c_eval_string("(define stdout (current-output-port))");
@@ -35,12 +30,20 @@ void LispRunner::run(QString exp) {
   this->in->set_data(exp);
 
   scm_c_eval_string("(define ans (eval (read) (interaction-environment)))");
-  scm_c_eval_string("(display ans)");
+  scm_c_eval_string("(format #t \"ans = ~s\" ans)");
   
   scm_c_eval_string("(force-output (current-output-port))");
   scm_c_eval_string("(force-output (current-error-port))");
-  QString outstr = out->get_data();
-  QString errstr = err->get_data();
 
-  emit returned(outstr, errstr);
+  emit returned();
+}
+
+void LispRunner::get_stdoutportstr() {
+  QString stdout_str = out->get_data();
+  emit read_stdout(stdout_str);
+}
+
+void LispRunner::get_stderrportstr() {
+  QString stderr_str = err->get_data();
+  emit read_stderr(stderr_str);
 }

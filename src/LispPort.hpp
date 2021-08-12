@@ -18,6 +18,10 @@ public:
   QString get_data(bool notclear = false);
 
   void clear();
+
+signals:
+  void read_port();
+  void write_port();
   
 protected:
   scm_t_port_type* porttype;

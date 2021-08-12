@@ -22,7 +22,8 @@ signals:
 
 private slots:
   void push_run();
-  void show_returned(QString, QString);
+  //void show_returned(QString, QString);
+  void update_console(QString);
 
 private:
   QVBoxLayout *topbox;

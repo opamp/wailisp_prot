@@ -11,7 +11,9 @@ CentralWidget::CentralWidget(QWidget* parent)
   connect(lispthread, SIGNAL(finished()), lisprunner, SLOT(deleteLater()));
   connect(this, SIGNAL(run_lisp(QString)), lisprunner, SLOT(run(QString)));
   connect(this, SIGNAL(init_lisp()), lisprunner, SLOT(init()));
-  connect(lisprunner, SIGNAL(returned(QString, QString)), this, SLOT(show_returned(QString, QString)));
+  //connect(lisprunner, SIGNAL(returned(QString, QString)), this, SLOT(show_returned(QString, QString)));
+  connect(lisprunner, SIGNAL(read_stdout(QString)), this, SLOT(update_console(QString)));
+  connect(lisprunner, SIGNAL(read_stderr(QString)), this, SLOT(update_console(QString)));
   lispthread->start();
 
   // UI
@@ -39,12 +41,9 @@ void CentralWidget::push_run() {
   emit run_lisp(texpline->text());
 }
 
-void CentralWidget::show_returned(QString out, QString err) {
-  if(!out.isEmpty()){
-    this->console->append(out);
-  }
-  if(!err.isEmpty()){
-    this->console->append(err);
+void CentralWidget::update_console(QString str) {
+  if(!str.isEmpty()){
+    this->console->append(str);
   }
 }
 

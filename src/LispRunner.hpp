@@ -12,8 +12,14 @@ public slots:
   void init();
   void run(QString exp);
 
+private slots:
+  void get_stdoutportstr();
+  void get_stderrportstr();
+
 signals:
-  void returned(QString, QString);
+  void returned();
+  void read_stdout(QString);
+  void read_stderr(QString);
 
 private:
   LispPort* in;
