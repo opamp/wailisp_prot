@@ -1,10 +1,6 @@
 #include "LispPort.hpp"
 #include <cstring>
 
-/*
-sample: https://github.com/emacsmirror/lilypond/blob/2be19f11c11d89f03d0c54ceeb20b8a022261af7/lily/include/overlay-string-port.hh
-*/
-
 static size_t read_stream(SCM port, SCM dst, size_t start, size_t count) {
   auto obj = (LispPort*)SCM_STREAM(port);
   return obj->read(dst, start ,count);

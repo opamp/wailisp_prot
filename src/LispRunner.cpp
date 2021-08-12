@@ -29,6 +29,7 @@ void LispRunner::init() {
 void LispRunner::run(QString exp) {
   this->in->set_data(exp);
 
+  // TODO: 例外をキャッチしないと落ちます
   scm_c_eval_string("(define ans (eval (read) (interaction-environment)))");
   scm_c_eval_string("(format #t \"ans = ~s\" ans)");
   
