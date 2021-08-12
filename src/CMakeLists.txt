@@ -2,7 +2,8 @@ set(MAINSRC
   ${SRC_DIR}/main.cpp
   ${SRC_DIR}/MainWindow.cpp
   ${SRC_DIR}/CentralWidget.cpp
-  ${SRC_DIR}/LispRunner.cpp)
+  ${SRC_DIR}/LispRunner.cpp
+  ${SRC_DIR}/LispPort.cpp)
 
 
 add_executable(${EXEFILE_NAME} ${MAINSRC})

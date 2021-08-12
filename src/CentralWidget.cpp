@@ -1,5 +1,5 @@
-#include <string>
 #include "CentralWidget.hpp"
+#include <string>
 
 CentralWidget::CentralWidget(QWidget* parent)
   :QWidget(parent) {
@@ -10,6 +10,7 @@ CentralWidget::CentralWidget(QWidget* parent)
   lisprunner->moveToThread(lispthread);
   connect(lispthread, SIGNAL(finished()), lisprunner, SLOT(deleteLater()));
   connect(this, SIGNAL(run_lisp(QString)), lisprunner, SLOT(run(QString)));
+  connect(lisprunner, SIGNAL(returned(QString, QString)), this, SLOT(show_returned(QString, QString)));
   lispthread->start();
 
   // UI
@@ -33,6 +34,15 @@ CentralWidget::CentralWidget(QWidget* parent)
 
 void CentralWidget::push_run() {
   emit run_lisp(texpline->text());
+}
+
+void CentralWidget::show_returned(QString out, QString err) {
+  if(!out.isEmpty()){
+    this->console->append(out);
+  }
+  if(!err.isEmpty()){
+    this->console->append(err);
+  }
 }
 
 CentralWidget::~CentralWidget() {
