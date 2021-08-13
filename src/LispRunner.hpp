@@ -7,19 +7,14 @@ class LispRunner : public QObject {
 Q_OBJECT
 public:
   LispRunner(QObject *parent = 0);
+  void set_portsdata(LispPortData* in, LispPortData* out, LispPortData *err);
 
 public slots:
-  void init();
-  void run(QString exp);
-
-private slots:
-  void get_stdoutportstr();
-  void get_stderrportstr();
+  void init(LispPortData*, LispPortData*, LispPortData*);
+  void run();
 
 signals:
   void returned();
-  void read_stdout(QString);
-  void read_stderr(QString);
 
 private:
   LispPort* in;

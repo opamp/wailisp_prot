@@ -5,14 +5,17 @@ LispRunner::LispRunner(QObject *parent) :
   QObject(parent) {
 }
 
-void LispRunner::init() {
+void LispRunner::init(LispPortData* in_d, LispPortData* out_d, LispPortData* err_d) {
   scm_init_guile();
+  
   in = new LispPort(this);
   out = new LispPort(this);
   err = new LispPort(this);
-  connect(out, SIGNAL(write_port()), this, SLOT(get_stdoutportstr()));
-  connect(err, SIGNAL(write_port()), this, SLOT(get_stderrportstr()));
 
+  in->set_portdata(in_d);
+  out->set_portdata(out_d);
+  err->set_portdata(err_d);
+  
   scm_c_eval_string("(define stdin (current-input-port))");
   scm_c_eval_string("(define stdout (current-output-port))");
   scm_c_eval_string("(define stderr (current-error-port))");
@@ -26,9 +29,7 @@ void LispRunner::init() {
   scm_set_current_error_port(lisp_errport);
 }
 
-void LispRunner::run(QString exp) {
-  this->in->set_data(exp);
-
+void LispRunner::run() {
   // TODO: 例外をキャッチしないと落ちます
   scm_c_eval_string("(define ans (eval (read) (interaction-environment)))");
   scm_c_eval_string("(format #t \"ans = ~s\" ans)");
@@ -39,12 +40,3 @@ void LispRunner::run(QString exp) {
   emit returned();
 }
 
-void LispRunner::get_stdoutportstr() {
-  QString stdout_str = out->get_data();
-  emit read_stdout(stdout_str);
-}
-
-void LispRunner::get_stderrportstr() {
-  QString stderr_str = err->get_data();
-  emit read_stderr(stderr_str);
-}

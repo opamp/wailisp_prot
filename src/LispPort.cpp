@@ -17,6 +17,9 @@ LispPort::LispPort(QObject *parent):
   porttype = scm_make_port_type(portname, &read_stream, &write_stream);
 }
 
+void LispPort::set_portdata(LispPortData* portdata) {
+  this->portdata = portdata;
+}
 
 SCM LispPort::get_read_port() {
   return scm_c_make_port(porttype, SCM_RDNG, (scm_t_bits)this);
@@ -27,11 +30,13 @@ SCM LispPort::get_write_port() {
 }
 
 size_t LispPort::read(SCM dst, size_t start, size_t count) {
-  if(this->data.isEmpty()){
+  QString data = portdata->get_data(true);
+  QString read_str;
+  
+  if(data.isEmpty()){
       return 0;
   }
 
-  QString read_str;
   if(data.length() <= count) {
     read_str = data;
     data.clear();
@@ -39,6 +44,7 @@ size_t LispPort::read(SCM dst, size_t start, size_t count) {
     read_str = data.left(count);
     data = data.right(count + 1);
   }
+  portdata->set_data(data);
 
   QByteArray ba = read_str.toLocal8Bit();
   const char *cstr = ba.data();
@@ -53,17 +59,26 @@ size_t LispPort::write(SCM src, size_t start, size_t count) {
   memcpy(buf, SCM_BYTEVECTOR_CONTENTS(src) + start, count);
   buf[count] = '\0';
   QString qbuf = QString(reinterpret_cast<char*>(buf));
-  this->data += qbuf;
+  
+  QString data = portdata->get_data(true);
+  data += qbuf;
+  portdata->set_data(data);
+  
   emit write_port();
   return count;
 }
 
 
-void LispPort::set_data(QString data) {
-  this->data = data;
+LispPortData::LispPortData(QObject *parent) :
+  QObject(parent) {
 }
 
-QString LispPort::get_data(bool notclear) {
+void LispPortData::set_data(QString data) {
+  this->data = data;
+  emit update_data();
+}
+
+QString LispPortData::get_data(bool notclear) {
   QString rtn = this->data;
   if(!notclear){
     this->clear();
@@ -71,6 +86,7 @@ QString LispPort::get_data(bool notclear) {
   return rtn;
 }
 
-void LispPort::clear() {
+void LispPortData::clear() {
   this->data.clear();
 }
+

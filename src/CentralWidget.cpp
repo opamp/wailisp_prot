@@ -3,16 +3,29 @@
 
 CentralWidget::CentralWidget(QWidget* parent)
   :QWidget(parent) {
-
+  
   // Lisp
+  in = new LispPortData();
+  out = new LispPortData();
+  err = new LispPortData();
+  connect(out, SIGNAL(update_data()), this, SLOT(update_std_console()));
+  connect(err, SIGNAL(update_data()), this, SLOT(update_err_console()));
+  
   lispthread = new QThread(this);
   lisprunner = new LispRunner();
   lisprunner->moveToThread(lispthread);
-  connect(lispthread, SIGNAL(finished()), lisprunner, SLOT(deleteLater()));
-  connect(this, SIGNAL(run_lisp(QString)), lisprunner, SLOT(run(QString)));
-  connect(this, SIGNAL(init_lisp()), lisprunner, SLOT(init()));
-  connect(lisprunner, SIGNAL(read_stdout(QString)), this, SLOT(update_console(QString)));
-  connect(lisprunner, SIGNAL(read_stderr(QString)), this, SLOT(update_console(QString)));
+  connect(lispthread,
+          SIGNAL(finished()),
+          lisprunner,
+          SLOT(deleteLater()));
+  connect(this,
+          SIGNAL(run_lisp()),
+          lisprunner,
+          SLOT(run()));
+  connect(this,
+          SIGNAL(init_lisp(LispPortData*, LispPortData*, LispPortData*)),
+          lisprunner,
+          SLOT(init(LispPortData*, LispPortData*, LispPortData*)));
   lispthread->start();
 
   // UI
@@ -32,15 +45,24 @@ CentralWidget::CentralWidget(QWidget* parent)
 
   setLayout(topbox);
 
-  emit init_lisp();
+  emit init_lisp(in, out, err);
 }
 
 
 void CentralWidget::push_run() {
-  emit run_lisp(texpline->text());
+  in->set_data(texpline->text());
+  emit run_lisp();
 }
 
-void CentralWidget::update_console(QString str) {
+void CentralWidget::update_std_console() {
+  QString str = out->get_data();
+  if(!str.isEmpty()){
+    this->console->append(str);
+  }
+}
+
+void CentralWidget::update_err_console() {
+  QString str = err->get_data();
   if(!str.isEmpty()){
     this->console->append(str);
   }
