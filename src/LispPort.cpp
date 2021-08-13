@@ -1,5 +1,6 @@
 #include "LispPort.hpp"
 #include <cstring>
+#include <QEventLoop>
 
 static size_t read_stream(SCM port, SCM dst, size_t start, size_t count) {
   auto obj = (LispPort*)SCM_STREAM(port);
@@ -22,7 +23,7 @@ void LispPort::set_portdata(LispPortData* portdata) {
 }
 
 SCM LispPort::get_read_port() {
-  return scm_c_make_port(porttype, SCM_RDNG, (scm_t_bits)this);
+  return scm_c_make_port(porttype, SCM_RDNG | SCM_BUFLINE, (scm_t_bits)this);
 }
 
 SCM LispPort::get_write_port() {
@@ -32,9 +33,12 @@ SCM LispPort::get_write_port() {
 size_t LispPort::read(SCM dst, size_t start, size_t count) {
   QString data = portdata->get_data(true);
   QString read_str;
-  
+
   if(data.isEmpty()){
-      return 0;
+    QEventLoop loop;
+    connect(portdata, SIGNAL(update_data()), &loop, SLOT(quit()));
+    loop.exec();
+    data = portdata->get_data(true);
   }
 
   if(data.length() <= count) {

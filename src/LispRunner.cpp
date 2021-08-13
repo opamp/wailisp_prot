@@ -27,6 +27,9 @@ void LispRunner::init(LispPortData* in_d, LispPortData* out_d, LispPortData* err
   scm_set_current_input_port(lisp_input);
   scm_set_current_output_port(lisp_outport);
   scm_set_current_error_port(lisp_errport);
+
+  scm_c_eval_string("(use-modules (system repl repl))");
+  scm_c_eval_string("(start-repl)");
 }
 
 void LispRunner::run() {
