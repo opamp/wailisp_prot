@@ -57,14 +57,18 @@ void CentralWidget::push_run() {
 void CentralWidget::update_std_console() {
   QString str = out->get_data();
   if(!str.isEmpty()){
-    this->console->append(str);
+    this->console->moveCursor(QTextCursor::End);
+    this->console->insertPlainText(str);
+    this->console->moveCursor(QTextCursor::End);
   }
 }
 
 void CentralWidget::update_err_console() {
   QString str = err->get_data();
   if(!str.isEmpty()){
-    this->console->append(str);
+    this->console->moveCursor(QTextCursor::End);
+    this->console->insertPlainText(str);
+    this->console->moveCursor(QTextCursor::End);
   }
 }
 
