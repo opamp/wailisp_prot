@@ -23,11 +23,11 @@ void LispPort::set_portdata(LispPortData* portdata) {
 }
 
 SCM LispPort::get_read_port() {
-  return scm_c_make_port(porttype, SCM_RDNG | SCM_BUFLINE, (scm_t_bits)this);
+  return scm_c_make_port(porttype, SCM_RDNG | SCM_BUF0, (scm_t_bits)this);
 }
 
 SCM LispPort::get_write_port() {
-  return scm_c_make_port(porttype, SCM_WRTNG | SCM_BUFLINE, (scm_t_bits)this);
+  return scm_c_make_port(porttype, SCM_WRTNG | SCM_BUF0, (scm_t_bits)this);
 }
 
 size_t LispPort::read(SCM dst, size_t start, size_t count) {
@@ -46,7 +46,7 @@ size_t LispPort::read(SCM dst, size_t start, size_t count) {
     data.clear();
   }else{
     read_str = data.left(count);
-    data = data.right(count + 1);
+    data = data.right(data.length() - count);
   }
   portdata->set_data(data);
 

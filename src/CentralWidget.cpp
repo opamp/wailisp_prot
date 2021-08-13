@@ -50,7 +50,7 @@ CentralWidget::CentralWidget(QWidget* parent)
 
 
 void CentralWidget::push_run() {
-  in->set_data(texpline->text());
+  in->set_data(texpline->text() + "\n");
   //emit run_lisp();
 }
 
