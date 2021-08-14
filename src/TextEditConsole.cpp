@@ -17,6 +17,7 @@ QString TextEditConsoleData::to_QString() {
 TextEditConsole::TextEditConsole(QWidget* parent) :
   QTextEdit(parent) {
   userinput = "";
+  userinput_pos = 0;
 }
 
 void TextEditConsole::print(ConsoleData *data) {
@@ -25,6 +26,29 @@ void TextEditConsole::print(ConsoleData *data) {
     this->moveCursor(QTextCursor::End);
     this->insertPlainText(printstr);
     this->moveCursor(QTextCursor::End);
+  }
+}
+
+bool TextEditConsole::deleteChar(bool bsmode) {
+  if(!bsmode) {
+    // Delete
+    if( userinput.length() > userinput_pos) {
+      this->textCursor().deleteChar();
+      userinput = userinput.left(userinput_pos) + userinput.mid(userinput_pos + 1);
+      return true;
+    }else {
+      return false;
+    }
+  }else {
+    // BackSpace
+    if(userinput_pos > 0) {
+      this->textCursor().deletePreviousChar();
+      userinput = userinput.left(userinput_pos - 1) + userinput.mid(userinput_pos);
+      userinput_pos -= 1;
+      return true;
+    }else {
+      return false;
+    }
   }
 }
 
@@ -44,14 +68,27 @@ void TextEditConsole::keyPressEvent(QKeyEvent* e) {
   std::cout<<"END"<<std::endl;
   */
 
-  // Text input or Enter
+  // Text input/delete or Enter
   if(code == Qt::Key_Enter || code == Qt::Key_Return) {
+    // Press Enter/Retrun
     emit enter(userinput);
     userinput.clear();
+    userinput_pos = 0;
     this->insertPlainText(input_char);
+    
+  }else if(code == Qt::Key_Backspace) {
+    // Press BS
+    deleteChar(true);
+    
+  }else if(code == Qt::Key_Delete) {
+    // Press Delete
+    deleteChar(false);
+    
   }else if(!input_char.isEmpty()) {
+    // Input chars
     this->insertPlainText(input_char);
     userinput += input_char;
+    userinput_pos += input_char.length();
   }
 
   // shortcuts

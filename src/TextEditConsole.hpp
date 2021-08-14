@@ -30,7 +30,10 @@ protected:
   void keyPressEvent(QKeyEvent* e);
   //  void KeyReleaseEvent(QKeyEvent* e);
 
+  bool deleteChar(bool bsmode = false);
+
 private:
   QString userinput;
+  int userinput_pos;
 };
 #endif
