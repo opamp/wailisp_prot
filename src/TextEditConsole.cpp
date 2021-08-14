@@ -52,28 +52,63 @@ bool TextEditConsole::deleteChar(bool bsmode) {
   }
 }
 
+bool TextEditConsole::moveLeft() {
+  if(userinput_pos > 0){
+    this->moveCursor(QTextCursor::Left);
+    userinput_pos -= 1;
+    return true;
+  }else {
+    return false;
+  }
+}
+
+bool TextEditConsole::moveRight() {
+  if(userinput_pos < userinput.length()) {
+    this->moveCursor(QTextCursor::Right);
+    userinput_pos += 1;
+    return true;
+  }else {
+    return false;
+  }
+}
+
+void TextEditConsole::insertStr(QString c) {
+  this->insertPlainText(c);
+  userinput += c;
+  userinput_pos += c.length();
+}
+
 void TextEditConsole::keyPressEvent(QKeyEvent* e) {
   int code = e->key();
   QString input_char = e->text();
-  
-  /* sample
-  std::cout<<"press key = "<<code<<", "<<txt.toStdString()<<std::endl;
-  if(e->modifiers() == Qt::ControlModifier) {
-    std::cout<<"Control"<<std::endl;
-    if(code == Qt::Key_A) {
-      std::cout<<"Ctrl-A"<<std::endl;
-    }
-  }
-  this->moveCursor(QTextCursor::End);
-  std::cout<<"END"<<std::endl;
-  */
 
+  // shortcuts
+  if(e->modifiers() == Qt::ControlModifier) {
+    // Ctrl-*
+    switch(code) {
+    case Qt::Key_D:
+      deleteChar(false);
+      break;
+    case Qt::Key_F:
+      moveRight();
+      break;
+    case Qt::Key_B:
+      moveLeft();
+      break;
+    }
+    return;
+  }else if(e->modifiers() == Qt::MetaModifier) {
+    // M-*
+    return;
+  }
+    
   // Text input/delete or Enter
   if(code == Qt::Key_Enter || code == Qt::Key_Return) {
     // Press Enter/Retrun
     emit enter(userinput);
     userinput.clear();
     userinput_pos = 0;
+    this->moveCursor(QTextCursor::End);
     this->insertPlainText(input_char);
     
   }else if(code == Qt::Key_Backspace) {
@@ -86,22 +121,6 @@ void TextEditConsole::keyPressEvent(QKeyEvent* e) {
     
   }else if(!input_char.isEmpty()) {
     // Input chars
-    this->insertPlainText(input_char);
-    userinput += input_char;
-    userinput_pos += input_char.length();
-  }
-
-  // shortcuts
-  if(e->modifiers() == Qt::ControlModifier) {
-    // Ctrl-*
-
-  }else if(e->modifiers() == Qt::MetaModifier) {
-    // M-*
-
-  }else if(e->modifiers() == Qt::ShiftModifier) {
-    // S-*
-
-  }else {
-    
+    insertStr(input_char);
   }
 }

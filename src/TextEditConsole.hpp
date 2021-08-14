@@ -31,6 +31,9 @@ protected:
   //  void KeyReleaseEvent(QKeyEvent* e);
 
   bool deleteChar(bool bsmode = false);
+  void insertStr(QString);
+  bool moveLeft();
+  bool moveRight();
 
 private:
   QString userinput;
