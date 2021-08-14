@@ -28,12 +28,12 @@ signals:
 
 protected:
   void keyPressEvent(QKeyEvent* e);
-  //  void KeyReleaseEvent(QKeyEvent* e);
 
   bool deleteChar(bool bsmode = false);
   void insertStr(QString);
   bool moveLeft();
   bool moveRight();
+  void moveinputpos();
 
 private:
   QString userinput;

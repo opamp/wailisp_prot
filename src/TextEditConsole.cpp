@@ -78,7 +78,18 @@ void TextEditConsole::insertStr(QString c) {
   userinput_pos += c.length();
 }
 
+void TextEditConsole::moveinputpos() {
+  this->moveCursor(QTextCursor::End);
+  this->moveCursor(QTextCursor::StartOfLine);
+  for(int i = 0; i < userinput_pos; i++) {
+    this->moveCursor(QTextCursor::Right);
+  }
+}
+
 void TextEditConsole::keyPressEvent(QKeyEvent* e) {
+  // move insert position
+  moveinputpos();
+
   int code = e->key();
   QString input_char = e->text();
 
@@ -124,7 +135,4 @@ void TextEditConsole::keyPressEvent(QKeyEvent* e) {
     insertStr(input_char);
   }
 
-  // temporary code for debug
-  std::cout<<"userinput: "<<userinput.toStdString()<<std::endl;
-  std::cout<<"userinput_pos: "<<userinput_pos<<std::endl;
 }
