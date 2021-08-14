@@ -1,6 +1,16 @@
 #include "TextEditConsole.hpp"
 #include <iostream>
 
+static bool isPrintableQString(QString str) {
+  for(int i = 0;i < str.length(); i++) {
+    QChar c = str.at(i);
+    if(!c.isPrint()) {
+      return false;
+    }
+  }
+  return true;
+}
+
 TextEditConsoleData::TextEditConsoleData(QObject *parent):
   QObject(parent) {
 }
@@ -130,7 +140,7 @@ void TextEditConsole::keyPressEvent(QKeyEvent* e) {
     // Press Delete
     deleteChar(false);
     
-  }else if(!input_char.isEmpty()) {
+  }else if(!input_char.isEmpty() && isPrintableQString(input_char)) {
     // Input chars
     insertStr(input_char);
   }
