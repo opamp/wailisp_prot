@@ -74,7 +74,7 @@ bool TextEditConsole::moveRight() {
 
 void TextEditConsole::insertStr(QString c) {
   this->insertPlainText(c);
-  userinput += c;
+  userinput = userinput.left(userinput_pos) + c + userinput.mid(userinput_pos);
   userinput_pos += c.length();
 }
 
@@ -123,4 +123,8 @@ void TextEditConsole::keyPressEvent(QKeyEvent* e) {
     // Input chars
     insertStr(input_char);
   }
+
+  // temporary code for debug
+  std::cout<<"userinput: "<<userinput.toStdString()<<std::endl;
+  std::cout<<"userinput_pos: "<<userinput_pos<<std::endl;
 }
