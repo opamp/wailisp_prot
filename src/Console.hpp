@@ -9,7 +9,6 @@ public:
 
 class Console {
 public:
-  virtual void set_prompt(QString) = 0;
   virtual void print(ConsoleData*) = 0;
 };
 

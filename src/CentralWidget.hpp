@@ -23,6 +23,7 @@ signals:
 
 private slots:
   void push_run();
+  void input_lisp(QString);
   void update_std_console();
   void update_err_console();
 

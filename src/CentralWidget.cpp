@@ -35,8 +35,9 @@ CentralWidget::CentralWidget(QWidget* parent)
   texpline = new QLineEdit(this);
   runbtn = new QPushButton(tr("Run(Eval)"), this);
   console = new TextEditConsole(this);
-  
+
   connect(runbtn, SIGNAL(clicked()), this, SLOT(push_run()));
+  connect(console, SIGNAL(enter(QString)), this, SLOT(input_lisp(QString)));
 
   texpline_box->addWidget(texpline);
   texpline_box->addWidget(runbtn);
@@ -51,8 +52,12 @@ CentralWidget::CentralWidget(QWidget* parent)
 
 
 void CentralWidget::push_run() {
-  in->set_data(texpline->text() + "\n");
+  this->input_lisp(texpline->text());
   //emit run_lisp();
+}
+
+void CentralWidget::input_lisp(QString exp) {
+  in->set_data(exp + "\n");
 }
 
 void CentralWidget::update_std_console() {
