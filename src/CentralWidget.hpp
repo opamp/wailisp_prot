@@ -5,9 +5,9 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLineEdit>
-#include <QTextEdit>
 #include <QThread>
 
+#include "TextEditConsole.hpp"
 #include "LispRunner.hpp"
 #include "LispPort.hpp"
 
@@ -31,7 +31,7 @@ private:
   QHBoxLayout *texpline_box;
   QLineEdit *texpline;
   QPushButton *runbtn;
-  QTextEdit *console;
+  TextEditConsole *console;
 
   LispPortData *in;
   LispPortData *out;

@@ -2,6 +2,8 @@ set(MAINSRC
   ${SRC_DIR}/main.cpp
   ${SRC_DIR}/MainWindow.cpp
   ${SRC_DIR}/CentralWidget.cpp
+  ${SRC_DIR}/Console.cpp
+  ${SRC_DIR}/TextEditConsole.cpp
   ${SRC_DIR}/LispRunner.cpp
   ${SRC_DIR}/LispPort.cpp)
 

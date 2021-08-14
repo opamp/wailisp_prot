@@ -1,6 +1,7 @@
 #include "CentralWidget.hpp"
 #include <string>
 
+
 CentralWidget::CentralWidget(QWidget* parent)
   :QWidget(parent) {
   
@@ -33,7 +34,7 @@ CentralWidget::CentralWidget(QWidget* parent)
   texpline_box = new QHBoxLayout(this);
   texpline = new QLineEdit(this);
   runbtn = new QPushButton(tr("Run(Eval)"), this);
-  console = new QTextEdit(this);
+  console = new TextEditConsole(this);
   
   connect(runbtn, SIGNAL(clicked()), this, SLOT(push_run()));
 
@@ -55,21 +56,15 @@ void CentralWidget::push_run() {
 }
 
 void CentralWidget::update_std_console() {
-  QString str = out->get_data();
-  if(!str.isEmpty()){
-    this->console->moveCursor(QTextCursor::End);
-    this->console->insertPlainText(str);
-    this->console->moveCursor(QTextCursor::End);
-  }
+  TextEditConsoleData data;
+  data.set_data(out->get_data());
+  console->print(&data);
 }
 
 void CentralWidget::update_err_console() {
-  QString str = err->get_data();
-  if(!str.isEmpty()){
-    this->console->moveCursor(QTextCursor::End);
-    this->console->insertPlainText(str);
-    this->console->moveCursor(QTextCursor::End);
-  }
+  TextEditConsoleData data;
+  data.set_data(out->get_data());
+  console->print(&data);
 }
 
 CentralWidget::~CentralWidget() {
