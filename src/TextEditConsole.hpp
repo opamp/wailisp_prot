@@ -33,7 +33,9 @@ protected:
   void insertStr(QString);
   bool moveLeft();
   bool moveRight();
-  void moveinputpos();
+  void moveHead();
+  void moveEnd(); 
+  void movecursorinputpos();
 
 private:
   QString userinput;
