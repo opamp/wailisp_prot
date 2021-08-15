@@ -28,6 +28,7 @@ TextEditConsole::TextEditConsole(QWidget* parent) :
   QTextEdit(parent) {
   userinput = "";
   userinput_pos = 0;
+  history_pos = 0;
 }
 
 void TextEditConsole::print(ConsoleData *data) {
@@ -109,6 +110,39 @@ void TextEditConsole::movecursorinputpos() {
   }
 }
 
+void TextEditConsole::enter_exp() {
+  // Press Enter/Retrun
+  emit enter(userinput);
+
+  // Save history
+  if(!userinput.isEmpty()) {
+    history.push_back(userinput);
+    history_pos = history.length();
+  }
+  
+  userinput.clear();
+  userinput_pos = 0;
+  this->moveCursor(QTextCursor::End);
+  this->insertPlainText("\n");
+}
+
+void TextEditConsole::clear_exp() {
+  this->moveCursor(QTextCursor::End);
+  for(int i = 0; i < userinput.length(); i++) {
+    this->textCursor().deletePreviousChar();
+  }
+  userinput.clear();
+  userinput_pos = 0;
+}
+
+void TextEditConsole::insert_history() {
+  if(history_pos > 0 && history_pos <= history.length()) {
+    QString histexp = history.at(history_pos - 1);
+    clear_exp();
+    insertStr(histexp);
+  }
+}
+
 void TextEditConsole::keyPressEvent(QKeyEvent* e) {
   // move insert position
   movecursorinputpos();
@@ -135,6 +169,18 @@ void TextEditConsole::keyPressEvent(QKeyEvent* e) {
     case Qt::Key_E:
       moveEnd();
       break;
+    case Qt::Key_P:
+      insert_history();
+      if(history_pos > 0){
+        history_pos -= 1;
+      }
+      break;
+    case Qt::Key_N:
+      if(history_pos < history.length()) {
+        history_pos += 1;
+      }
+      insert_history();
+      break;
     }
     return;
   }else if(e->modifiers() == Qt::MetaModifier) {
@@ -144,12 +190,7 @@ void TextEditConsole::keyPressEvent(QKeyEvent* e) {
     
   // Text input/delete or Enter
   if(code == Qt::Key_Enter || code == Qt::Key_Return) {
-    // Press Enter/Retrun
-    emit enter(userinput);
-    userinput.clear();
-    userinput_pos = 0;
-    this->moveCursor(QTextCursor::End);
-    this->insertPlainText(input_char);
+    enter_exp();
     
   }else if(code == Qt::Key_Backspace) {
     // Press BS

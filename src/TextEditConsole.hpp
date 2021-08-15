@@ -29,6 +29,9 @@ signals:
 protected:
   void keyPressEvent(QKeyEvent* e);
 
+  void enter_exp();
+  void insert_history();
+  void clear_exp();
   bool deleteChar(bool bsmode = false);
   void insertStr(QString);
   bool moveLeft();
@@ -38,6 +41,8 @@ protected:
   void movecursorinputpos();
 
 private:
+  QVector<QString> history;
+  int history_pos;
   QString userinput;
   int userinput_pos;
 };
