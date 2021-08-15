@@ -83,13 +83,17 @@ bool TextEditConsole::moveRight() {
 }
 
 void TextEditConsole::moveHead() {
-  this->moveCursor(QTextCursor::StartOfLine);
+  for(int i = 0; i < userinput_pos; i++) {
+    this->moveCursor(QTextCursor::Left);
+  }
   userinput_pos = 0;
 }
 
 void TextEditConsole::moveEnd() {
-  this->moveCursor(QTextCursor::EndOfLine);
-  userinput_pos = this->textCursor().columnNumber();
+  for(int i = 0; i < userinput.length() - userinput_pos; i++) {
+    this->moveCursor(QTextCursor::Right);
+  }
+  userinput_pos = userinput.length();
 }
 
 void TextEditConsole::insertStr(QString c) {
@@ -100,9 +104,8 @@ void TextEditConsole::insertStr(QString c) {
 
 void TextEditConsole::movecursorinputpos() {
   this->moveCursor(QTextCursor::End);
-  this->moveCursor(QTextCursor::StartOfLine);
-  for(int i = 0; i < userinput_pos; i++) {
-    this->moveCursor(QTextCursor::Right);
+  for(int i = 0; i < userinput.length() - userinput_pos; i++) {
+    this->moveCursor(QTextCursor::Left);
   }
 }
 
