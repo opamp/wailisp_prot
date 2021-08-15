@@ -30,11 +30,14 @@ CentralWidget::CentralWidget(QWidget* parent)
   lispthread->start();
 
   // UI
-  topbox = new QVBoxLayout(this);
   console = new TextEditConsole(this);
-
   connect(console, SIGNAL(enter(QString)), this, SLOT(input_lisp(QString)));
 
+  editors = new CodeEditors(this);
+  connect(editors, SIGNAL(run_code(QString)), this, SLOT(input_lisp(QString)));
+
+  topbox = new QVBoxLayout(this);
+  topbox->addWidget(editors);
   topbox->addWidget(console);
 
   setLayout(topbox);

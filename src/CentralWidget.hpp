@@ -1,13 +1,10 @@
 #ifndef CENTRALWIDGET_HPP
 #define CENTRALWIDGET_HPP
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QLineEdit>
+#include <QtWidgets>
 #include <QThread>
 
 #include "TextEditConsole.hpp"
+#include "CodeEditors.hpp"
 #include "LispRunner.hpp"
 #include "LispPort.hpp"
 
@@ -27,13 +24,19 @@ private slots:
   void update_err_console();
 
 private:
-  QVBoxLayout *topbox;
+  // Widgets
   TextEditConsole *console;
+  CodeEditors *editors;
 
+  // Layouts
+  QVBoxLayout *topbox;
+
+  // LispPorts
   LispPortData *in;
   LispPortData *out;
   LispPortData *err;
 
+  // LispThread
   LispRunner *lisprunner;
   QThread *lispthread;
 };
