@@ -1,5 +1,4 @@
 #include "TextEditConsole.hpp"
-#include <iostream>
 
 static bool isPrintableQString(QString str) {
   for(int i = 0;i < str.length(); i++) {

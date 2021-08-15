@@ -22,16 +22,12 @@ signals:
   void init_lisp(LispPortData*, LispPortData*, LispPortData*);
 
 private slots:
-  void push_run();
   void input_lisp(QString);
   void update_std_console();
   void update_err_console();
 
 private:
   QVBoxLayout *topbox;
-  QHBoxLayout *texpline_box;
-  QLineEdit *texpline;
-  QPushButton *runbtn;
   TextEditConsole *console;
 
   LispPortData *in;

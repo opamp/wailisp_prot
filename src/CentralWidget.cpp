@@ -31,29 +31,15 @@ CentralWidget::CentralWidget(QWidget* parent)
 
   // UI
   topbox = new QVBoxLayout(this);
-  texpline_box = new QHBoxLayout(this);
-  texpline = new QLineEdit(this);
-  runbtn = new QPushButton(tr("Run(Eval)"), this);
   console = new TextEditConsole(this);
 
-  connect(runbtn, SIGNAL(clicked()), this, SLOT(push_run()));
   connect(console, SIGNAL(enter(QString)), this, SLOT(input_lisp(QString)));
 
-  texpline_box->addWidget(texpline);
-  texpline_box->addWidget(runbtn);
-  
-  topbox->addLayout(texpline_box);
   topbox->addWidget(console);
 
   setLayout(topbox);
 
   emit init_lisp(in, out, err);
-}
-
-
-void CentralWidget::push_run() {
-  this->input_lisp(texpline->text());
-  //emit run_lisp();
 }
 
 void CentralWidget::input_lisp(QString exp) {
