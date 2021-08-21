@@ -94,7 +94,28 @@ void CodeEditors::saveas_trig() {
 }
 
 void CodeEditors::close_trig() {
-  
+  int index = tab->currentIndex() - 1;
+  if(index < editors.length() && index >= 0) {
+    FileEdit *edit = editors.at(index);
+    if(edit->isChanged()) {
+      QMessageBox msg;
+      msg.setWindowTitle("The text has been changed");
+      msg.setText("This tab text has been changed.");
+      msg.setInformativeText("Do you want to save this tab?");
+      msg.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+      msg.setDefaultButton(QMessageBox::Cancel);
+      int result = msg.exec();
+      if(result == QMessageBox::Save) {
+        this->save_trig();
+      }else if(result == QMessageBox::Cancel) {
+        return;
+      }
+    }
+
+    tab->removeTab(index + 1);
+    delete edit;
+    editors.removeAt(index);
+  }
 }
 
 void CodeEditors::run_trig() {

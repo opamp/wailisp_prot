@@ -3,10 +3,17 @@
 
 FileEdit::FileEdit(QWidget* parent):
   QPlainTextEdit(parent) {
+  changed = false;
+
+  connect(this, SIGNAL(textChanged()), this, SLOT(setChanged()));
 }
 
 bool FileEdit::isAssociatedWithFile() {
   return not getFilePath().isEmpty();
+}
+
+bool FileEdit::isChanged() {
+  return this->changed;
 }
 
 void FileEdit::setFilePath(QString path) {
@@ -47,6 +54,7 @@ void FileEdit::save() {
     QTextStream out(&file);
     out << this->toPlainText();
     file.close();
+    changed = false;
   }
 }
 
@@ -60,5 +68,10 @@ void FileEdit::load() {
     this->setPlainText(in.readAll());
 
     file.close();
+    changed = false;
   }
+}
+
+void FileEdit::setChanged() {
+  changed = true;
 }
