@@ -88,7 +88,7 @@ void CodeEditors::saveas_trig() {
     QString path = QFileDialog::getSaveFileName(this, tr("Save File"));
     edit->setFilePath(path);
     QString tabtitle = edit->getTitle();
-    tab->setTabText(index, tabtitle);
+    tab->setTabText(index + 1, tabtitle);
     edit->save();
   }
 }
