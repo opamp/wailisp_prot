@@ -71,7 +71,7 @@ void CodeEditors::open_trig() {
 
 void CodeEditors::save_trig() {
   int index = tab->currentIndex() - 1;
-  if(index < editors.length()){
+  if(index < editors.length() && index >= 0){
     FileEdit *edit = editors.at(index);
     if(edit->isAssociatedWithFile()) {
       edit->save();
@@ -83,7 +83,7 @@ void CodeEditors::save_trig() {
 
 void CodeEditors::saveas_trig() {
   int index = tab->currentIndex() - 1;
-  if(index < editors.length()) {
+  if(index < editors.length() && index >= 0) {
     FileEdit *edit = editors.at(index);
     QString path = QFileDialog::getSaveFileName(this, tr("Save File"));
     edit->setFilePath(path);
