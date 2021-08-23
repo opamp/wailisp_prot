@@ -119,9 +119,23 @@ void CodeEditors::close_trig() {
 }
 
 void CodeEditors::run_trig() {
-  QPlainTextEdit *currentedit = dynamic_cast<QPlainTextEdit*>(tab->currentWidget());
+  int index = tab->currentIndex();
+  FileEdit *currentedit = dynamic_cast<FileEdit*>(tab->currentWidget());
   if(currentedit) {
     QString code = currentedit->toPlainText();
-    emit run_code(code);
+    if(index == 0) {
+      emit run_code(code);
+    }else {
+      if(!currentedit->isAssociatedWithFile()) {
+        QString path = QFileDialog::getSaveFileName(this, tr("Save File"));
+        currentedit->setFilePath(path);
+        QString tabtitle = currentedit->getTitle();
+        tab->setTabText(index, tabtitle);
+      }
+      currentedit->save();
+
+      QString load_code = "(load \"" + currentedit->getFilePath() + "\")";
+      emit run_code(load_code);
+    }
   }
 }

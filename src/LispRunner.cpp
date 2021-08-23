@@ -1,5 +1,7 @@
 #include "LispRunner.hpp"
 #include <libguile.h>
+#include <QTemporaryFile>
+#include <QTextStream>
 
 LispRunner::LispRunner(QObject *parent) :
   QObject(parent) {
@@ -30,16 +32,5 @@ void LispRunner::init(LispPortData* in_d, LispPortData* out_d, LispPortData* err
 
   scm_c_eval_string("(use-modules (system repl repl))");
   scm_c_eval_string("(start-repl)");
-}
-
-void LispRunner::run() {
-  // TODO: 例外をキャッチしないと落ちます
-  scm_c_eval_string("(define ans (eval (read) (interaction-environment)))");
-  scm_c_eval_string("(format #t \"ans = ~s\" ans)");
-  
-  scm_c_eval_string("(force-output (current-output-port))");
-  scm_c_eval_string("(force-output (current-error-port))");
-
-  emit returned();
 }
 

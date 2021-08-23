@@ -20,10 +20,6 @@ CentralWidget::CentralWidget(QWidget* parent)
           lisprunner,
           SLOT(deleteLater()));
   connect(this,
-          SIGNAL(run_lisp()),
-          lisprunner,
-          SLOT(run()));
-  connect(this,
           SIGNAL(init_lisp(LispPortData*, LispPortData*, LispPortData*)),
           lisprunner,
           SLOT(init(LispPortData*, LispPortData*, LispPortData*)));

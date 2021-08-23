@@ -11,7 +11,6 @@ public:
 
 public slots:
   void init(LispPortData*, LispPortData*, LispPortData*);
-  void run();
 
 signals:
   void returned();
