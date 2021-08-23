@@ -53,7 +53,7 @@ void CentralWidget::update_std_console() {
 
 void CentralWidget::update_err_console() {
   TextEditConsoleData data;
-  data.set_data(out->get_data());
+  data.set_data(err->get_data());
   console->print(&data);
 }
 
